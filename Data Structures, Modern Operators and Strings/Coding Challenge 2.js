@@ -46,6 +46,7 @@ const game = {
 // 1. Loop over the game.scored array and print each player name to the console,
 // along with the goal number (Example: "Goal 1: Lewandowski")
 
+console.log('Task 1:');
 for (const [index, player] of game.scored.entries()) {
     console.log(`Goal ${index + 1}: ${player}`);
 }
@@ -53,11 +54,13 @@ for (const [index, player] of game.scored.entries()) {
 // 2. Use a loop to calculate the average odd and log it to the console (We already
 // studied how to calculate averages, you can go check if you don't remember)
 
+console.log('Task 2:');
 let average = 0;
 for (const odd of Object.values(game.odds)) {
     average += odd;
 }
 average /= Object.values(game.odds).length;
+
 console.log(average);
 
 // 3. Print the 3 odds to the console, but in a nice formatted way, exactly like this:
@@ -68,6 +71,7 @@ console.log(average);
 // (except for "draw"). Hint: Note how the odds and the game objects have the
 // same property names
 
+console.log('Task 3:');
 for (const [team, odd] of Object.entries(game.odds)) {
     const teamStr = team === 'x' ? 'draw' : `victory ${game[team]}`;
     console.log(`Odd of ${teamStr}: ${odd}`);
@@ -82,3 +86,10 @@ for (const [team, odd] of Object.entries(game.odds)) {
 // Hummels: 1,
 // Lewandowski: 2
 // }
+
+console.log('Task 4:');
+const scorers = {};
+for (const player of game.scored) {
+    scorers[player] = (scorers[player] || 0) + 1;
+}
+console.log(scorers);
