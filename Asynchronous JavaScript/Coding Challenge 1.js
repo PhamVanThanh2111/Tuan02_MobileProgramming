@@ -7,30 +7,6 @@
 // and a longitude value ('lng') (these are GPS coordinates, examples are in test
 // data below).
 
-function whereAmI(lat, lng) {
-  fetch(
-    `https://geocode.xyz/${lat},${lng}?json=1&auth=104790112793232e15996998x78656`
-  )
-    .then((response) => {
-      if (!response.ok)
-        throw new Error(`Problem with geocoding ${response.status}`);
-      return response.json();
-    })
-    .then((data) => {
-      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
-    })
-    .then((response) => {
-      if (!response.ok)
-        throw new Error(`Country not found (${response.status})`);
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data[0]);
-    })
-    .catch((err) => console.error(`${err.message} 💥`));
-}
-whereAmI(52.508, 13.381);
-
 // 2. Do “reverse geocoding” of the provided coordinates. Reverse geocoding means
 // to convert coordinates to a meaningful location, like a city and country name.
 // Use this API to do reverse geocoding: https://geocode.xyz/api. The AJAX call
@@ -38,19 +14,24 @@ whereAmI(52.508, 13.381);
 // https://geocode.xyz/52.508,13.381?geoit=json. Use the fetch API and
 // promises to get the data. Do not use the 'getJSON' function we created, that
 // is cheating �
+
 // 3. Once you have the data, take a look at it in the console to see all the attributes
 // that you received about the provided location. Then, using this data, log a
 // message like this to the console: “You are in Berlin, Germany”
+
 // 4. Chain a .catch method to the end of the promise chain and log errors to the
 // console
+
 // 5. This API allows you to make only 3 requests per second. If you reload fast, you
 // will get this error with code 403. This is an error with the request. Remember,
 // fetch() does not reject the promise in this case. So create an error to reject
 // the promise yourself, with a meaningful error message
+
 // PART 2
 // 6. Now it's time to use the received data to render a country. So take the relevant
 // attribute from the geocoding API result, and plug it into the countries API that
 // we have been using.
+
 // 7. Render the country and catch any errors, just like we have done in the last
 // lecture (you can even copy this code, no need to type the same code)
 
@@ -60,3 +41,39 @@ whereAmI(52.508, 13.381);
 // § Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
 // § Coordinates 2: 19.037, 72.873
 // § Coordinates 3: -33.933, 18.474
+
+async function whereAmI(lat, lng) {
+  try {
+    const response1 = await fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=104790112793232e15996998x78656`
+    );
+    if (!response1.ok)
+      throw new Error(`Problem with geocoding ${response1.status}`);
+
+    const data1 = await response1.json();
+
+    const response2 = await fetch(
+      `https://restcountries.com/v3.1/name/${data1.country}`
+    );
+    if (!response2.ok)
+      throw new Error(`Country not found (${response2.status})`);
+
+    const data2 = await response2.json();
+
+    return data2[0]; // Trả về giá trị của data[0]
+  } catch (err) {
+    console.error(`${err.message} 💥`);
+  }
+}
+
+whereAmI(52.508, 13.381).then((data) => {
+  console.log(`You are in ${data.name.common}(52.508, 13.381)`);
+});
+
+whereAmI(19.037, 72.873).then((data) => {
+  console.log(`You are in ${data.name.common}(19.037, 72.873)`);
+});
+
+whereAmI(-33.933, 18.474).then((data) => {
+  console.log(`You are in ${data.name.common}(-33.933, 18.474)`);
+});
